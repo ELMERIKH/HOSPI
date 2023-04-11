@@ -21,7 +21,7 @@ public class CarController {
             headers = "Accept=application/json")
     public ModelAndView showCars() {
         List<Car> cars = carService.getAllCars();
-        ModelAndView modelAndView = new ModelAndView("Cars-List");
+        ModelAndView modelAndView = new ModelAndView("CarList");
         modelAndView.addObject("cars", cars);
         return modelAndView;
     }
@@ -71,13 +71,15 @@ public class CarController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/add")
-    public String addCar(Model model) {
-        model.addAttribute("car", new Car());
-        return "addCar";
+    public ModelAndView addCar() {
+        ModelAndView modelAndView = new ModelAndView("add-car");
+        modelAndView.addObject("car", new Car());
+        return modelAndView;
     }
+
     @PostMapping("/add")
-    public String addCarSubmit(@ModelAttribute Car car) {
+    public ModelAndView addCarSubmit(@ModelAttribute Car car) {
         carService.createCar(car);
-        return "redirect:/cars";
+        return new ModelAndView("redirect:/list");
     }
 }

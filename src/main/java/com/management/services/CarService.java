@@ -44,6 +44,7 @@ public class CarService extends IOException {
             car.setModel(carDetails.getModel());
             car.setYear(carDetails.getYear());
             car.setPrice(carDetails.getPrice());
+            car.setColor(carDetails.getColor());
             return carRepository.save(car);
         } else {
             throw   new ResourceNotFoundException("Car", "id", id);

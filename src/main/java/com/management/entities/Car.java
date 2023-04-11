@@ -19,7 +19,7 @@ public class Car {
 
 
     private String model;
-    private String Color;
+    private String color;
 
     @NotNull
 
@@ -32,11 +32,12 @@ public class Car {
     public Car() {
     }
 
-    public Car(String make, String model, String Color, Integer year, Double price) {
+    public Car(String make, String model, String color, Integer year, Double price) {
         this.make = make;
         this.model = model;
         this.year = year;
         this.price = price;
+        this.color=color;
     }
 
     public Long getId() {
@@ -69,6 +70,13 @@ public class Car {
 
     public void setYear(Integer year) {
         this.year = year;
+    }
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 
     public Double getPrice() {
