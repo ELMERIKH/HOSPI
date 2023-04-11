@@ -19,6 +19,7 @@ public class Car {
 
 
     private String model;
+    private String Color;
 
     @NotNull
 
@@ -31,7 +32,7 @@ public class Car {
     public Car() {
     }
 
-    public Car(String make, String model, Integer year, Double price) {
+    public Car(String make, String model, String Color, Integer year, Double price) {
         this.make = make;
         this.model = model;
         this.year = year;

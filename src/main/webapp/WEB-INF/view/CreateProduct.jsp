@@ -7,6 +7,7 @@
     <title>Product Creation</title>
 </head>
 <body>
+<header> <h1> product creation</h1></header>
 
 </body>
 </html>

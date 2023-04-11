@@ -5,6 +5,7 @@ import com.management.entities.Car;
 import com.management.repositories.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.management.services.CarService;
 
 import java.io.IOException;
 import java.util.List;
