@@ -25,12 +25,7 @@ public class CarController {
         modelAndView.addObject("cars", cars);
         return modelAndView;
     }
-    @GetMapping("/showCars")
-    public String showCars(Model model) {
-        List<Car> cars = carService.getAllCars();
-        model.addAllAttributes(cars);
-        return "Cars-List";
-    }
+
 
     @GetMapping("/")
     public List<Car> getAllCars() {
@@ -59,16 +54,28 @@ public class CarController {
         return carService.createCar(car);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Car> updateCar(@PathVariable(value = "id") Long id, @RequestBody Car carDetails) {
-        Car updatedCar = carService.updateCar(id, carDetails);
-        return ResponseEntity.ok(updatedCar);
+    @PostMapping("edit/{id}")
+    public ModelAndView updateCar(@PathVariable(value = "id") Long id,  Car carDetails) {
+
+       carService.updateCar(id, carDetails);
+
+        return new ModelAndView("redirect:/list");
+    }  @GetMapping("/edit/{id}")
+    public ModelAndView editCar(@PathVariable(value = "id") Long id) {
+        ModelAndView modelAndView = new ModelAndView("Edit");
+        modelAndView.addObject("car", carService.getCarById(id));
+        return modelAndView;
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping ("/delete")
     public ResponseEntity<?> deleteCar(@PathVariable(value = "id") Long id) {
         carService.deleteCar(id);
         return ResponseEntity.noContent().build();
+    }
+    @PostMapping("/delete/{id}")
+    public ModelAndView deleteSubmit(@PathVariable(value = "id")Long id) {
+        carService.deleteCar(id);
+        return new ModelAndView("redirect:/list");
     }
     @GetMapping("/add")
     public ModelAndView addCar() {
@@ -76,6 +83,7 @@ public class CarController {
         modelAndView.addObject("car", new Car());
         return modelAndView;
     }
+
 
     @PostMapping("/add")
     public ModelAndView addCarSubmit(@ModelAttribute Car car) {
