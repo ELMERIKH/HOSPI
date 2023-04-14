@@ -5,6 +5,7 @@ import com.management.entities.Car;
 import com.management.repositories.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.management.services.CarService;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,6 +24,7 @@ public class CarService extends IOException {
     public Optional<Car> getCarById(Long id) {
         return carRepository.findById(id);
     }
+
 
     public List<Car> getCarsByMake(String make) {
         return carRepository.findByMake(make);
@@ -43,6 +45,7 @@ public class CarService extends IOException {
             car.setModel(carDetails.getModel());
             car.setYear(carDetails.getYear());
             car.setPrice(carDetails.getPrice());
+            car.setColor(carDetails.getColor());
             return carRepository.save(car);
         } else {
             throw   new ResourceNotFoundException("Car", "id", id);
