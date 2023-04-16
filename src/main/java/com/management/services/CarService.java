@@ -4,6 +4,8 @@ package com.management.services;
 import com.management.entities.Car;
 import com.management.repositories.CarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.management.services.CarService;
 
@@ -19,6 +21,16 @@ public class CarService extends IOException {
 
     public List<Car> getAllCars() {
         return carRepository.findAll();
+    }
+    public Page<Car> getCars(Pageable pageable) {
+        return carRepository.findAll(pageable);
+    }
+    public List<Car> getCarsByKeyword(String keyword) {
+        return carRepository.findByMakeContainingIgnoreCaseOrModelContainingIgnoreCaseOrColorContainingIgnoreCase(keyword, keyword, keyword);
+    }
+
+    public Page<Car> getCarsByKeyword(String keyword, Pageable pageable) {
+        return carRepository.findByMakeContainingIgnoreCaseOrModelContainingIgnoreCaseOrColorContainingIgnoreCase(keyword, keyword, keyword, pageable);
     }
 
     public Optional<Car> getCarById(Long id) {
@@ -41,11 +53,13 @@ public class CarService extends IOException {
 
         if (optionalCar.isPresent()) {
             Car car = optionalCar.get();
+            car.setImage(carDetails.getImage());
             car.setMake(carDetails.getMake());
             car.setModel(carDetails.getModel());
             car.setYear(carDetails.getYear());
             car.setPrice(carDetails.getPrice());
             car.setColor(carDetails.getColor());
+
             return carRepository.save(car);
         } else {
             throw   new ResourceNotFoundException("Car", "id", id);
