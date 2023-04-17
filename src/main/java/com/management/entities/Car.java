@@ -5,6 +5,8 @@ import org.jetbrains.annotations.NotNull;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.awt.*;
+
 
 @Entity
 @Table(name="car")
@@ -17,7 +19,7 @@ public class Car {
 
     private String make;
 
-
+    private String image;
     private String model;
     private String color;
 
@@ -32,12 +34,13 @@ public class Car {
     public Car() {
     }
 
-    public Car(String make, String model, String color, Integer year, Double price) {
+    public Car(String make, String model,String image, String color, Integer year, Double price) {
         this.make = make;
         this.model = model;
         this.year = year;
         this.price = price;
         this.color=color;
+        this.image=image;
     }
 
     public Long getId() {
@@ -50,6 +53,13 @@ public class Car {
 
     public String getMake() {
         return make;
+    }
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public void setMake(String make) {

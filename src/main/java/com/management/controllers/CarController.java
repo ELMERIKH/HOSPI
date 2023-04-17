@@ -3,6 +3,9 @@ package com.management.controllers;
 import com.management.entities.Car;
 import com.management.services.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +22,24 @@ public class CarController {
 
     @RequestMapping(value = "/list", method = RequestMethod.GET,
             headers = "Accept=application/json")
-    public ModelAndView showCars() {
+    public ModelAndView showCars(@RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String keyword) {
         List<Car> cars = carService.getAllCars();
-        ModelAndView modelAndView = new ModelAndView("CarList");
+
+        Pageable pageable = PageRequest.of(page, 8); // page size of 10
+
+        Page<Car> carPage;
+
+        if (keyword == null || keyword.isEmpty()) {
+            carPage = carService.getCars(pageable);
+            cars = carPage.getContent();
+        } else {
+            carPage = carService.getCarsByKeyword(keyword, pageable);
+            cars = carService.getCarsByKeyword(keyword);
+        }
+        ModelAndView modelAndView = new ModelAndView("carlist");
+        modelAndView.addObject("carPage", carPage);
         modelAndView.addObject("cars", cars);
+        modelAndView.addObject("keyword", keyword);
         return modelAndView;
     }
 

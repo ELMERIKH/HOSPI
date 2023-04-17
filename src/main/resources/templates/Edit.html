@@ -1,26 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template.html"
+>
 <head> <meta charset="UTF-8">
+
+  <link rel="stylesheet" href="/webjars/bootstrap/5.2.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/webjars/bootstrap-icons/1.10.3/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
 
   <title>Edit Cars</title>
 </head>
 <body>
 <h1>Edit Car</h1>
-<form th:action="@{/edit/{id}(id=${id})}" method="post">
+<div layout:fragment="content">
+  <form th:action="@{/edit/{id}(id=${id})}" method="post">
+    <table>
+      <tr>
+        <td><label>Name:</label></td>
+        <td><input type="text" name="make" th:field="${car.make}" /></td>
+      </tr>
+      <tr>
+        <td><label for="image-url">Image:</label></td>
+        <td>
+          <input type="url" name="image" id="image-url" th:field="${car.image}" />
 
+        </td>  </tr>
+        <tr><td> </td><td> <img id="preview-image" alt="Preview Image" width="250" height="200"></td>
+      </tr>
+      <tr>
+        <td><label>Model:</label></td>
+        <td><input type="text" name="model" th:field="${car.model}" /></td>
+      </tr>
+      <tr>
+        <td><label>Year:</label></td>
+        <td><input type="text" name="year" th:field="${car.year}" /></td>
+      </tr>
+      <tr>
+        <td><label>Color:</label></td>
+        <td><input type="text" name="color" th:field="${car.color}" /></td>
+      </tr>
+      <tr>
+        <td><label>Price:</label></td>
+        <td><input type="text" name="price" th:field="${car.price}" /></td>
+      </tr>
+      <tr>
+        <td colspan="2"><button type="submit" class="btn btn-primary">Save Changes</button></td>
+      </tr>
+    </table>
+  </form>
 
-  <input type="text" name="id" th:field="${car.id}" />
-  <label>Name:</label>
-  <input type="text" name="make" th:field="${car.make}" />
-  <label>Model:</label>
-  <input type="text" name="model" th:field="${car.model}" />
-  <label>Year:</label>
-  <input type="text" name="year" th:field="${car.year}" />
-  <label>Color:</label>
-  <input type="text" name="color" th:field="${car.color}" />
-  <label>Price:</label>
-  <input type="text" name="price" th:field="${car.price}" />
-  <button type="submit" class="btn btn-primary">Save Changes</button>
-</form>
+  <script>
+    const imageUrlInput = document.getElementById('image-url');
+    const previewImage = document.getElementById('preview-image');
+     previewImage.src=imageUrlInput.value;
+    imageUrlInput.addEventListener('input', () => {
+      previewImage.src = imageUrlInput.value;
+    });
+  </script>
+</div>
 </body>
 </html>

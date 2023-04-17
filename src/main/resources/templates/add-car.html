@@ -1,37 +1,20 @@
 
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template.html"
+>
 <head>
     <meta charset="UTF-8">
     <title>Add Car</title>
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
     <!-- Custom CSS -->
-    <style>
-        body {
-            padding-top: 4rem;
-        }
-    </style>
+
 </head>
 <body>
 <!-- Navigation Bar -->
-<nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
-    <a class="navbar-brand" href="#">Add Car</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{list}">Cars</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<div layout:fragment="content">
 
 <div class="container">
     <h1>Add a Car</h1>
@@ -40,6 +23,8 @@
         <input type="text" th:field="*{make}"/><br>
         <label>Model:</label><br>
         <input type="text" th:field="*{model}"/><br>
+        <label>Image:</label><br>
+        <input type="text" th:field="*{image}"/><br>
         <label>Year:</label><br>
         <input type="text" th:field="*{year}"/><br>
         <label>Price:</label><br>
@@ -51,6 +36,6 @@
     </form>
 </div>
 
-
+</div>
 </body>
 </html>
