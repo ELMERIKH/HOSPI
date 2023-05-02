@@ -114,21 +114,15 @@ private DoctorRepository doctorRepository;
     @GetMapping("/events")
     @ResponseBody
     public List<Map<String, Object>> getEvents() {
+        List<Appointment> appointments = patientBookingServiceImpl.getAllAppointments();
         List<Map<String, Object>> calendarEvents = new ArrayList<>();
 
-        // First event
-        Map<String, Object> event1 = new HashMap<>();
-        event1.put("title", "Meeting with John");
-        event1.put("start", "2023-05-02T10:00:00");
-        event1.put("end", "2023-05-02T11:00:00");
-        calendarEvents.add(event1);
-
-        // Second event
-        Map<String, Object> event2 = new HashMap<>();
-        event2.put("title", "Lunch with Susan");
-        event2.put("start", "2023-05-02T12:00:00");
-        event2.put("end", "2023-05-02T13:00:00");
-        calendarEvents.add(event2);
+        for (Appointment appointment : appointments) {
+            Map<String, Object> event = new HashMap<>();
+            event.put("title", appointment.getPatient().getNom());
+            event.put("start", appointment.getStartTime().toString());
+            calendarEvents.add(event);
+        }
 
         return calendarEvents;
     }
