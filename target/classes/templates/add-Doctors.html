@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template.html"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Add Doctors</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <!-- Custom CSS -->
+
+</head>
+<body>
+<!-- Navigation Bar -->
+<div layout:fragment="content">
+
+    <div class="container">
+        <h1>Add a Doctors</h1>
+        <form method="post" th:object="${doctor}" th:action="@{/doctors/add}">
+            <label>Name:</label><br>
+            <input type="text" th:field="*{name}"/><br>
+            <label>Email:</label><br>
+            <input type="text" th:field="*{email}"/><br>
+            <label>Image:</label><br>
+            <input type="text" th:field="*{image}"/><br>
+            <label>Speciality:</label><br>
+            <input type="text" th:field="*{specialty}"/><br>
+            <label>City:</label><br>
+            <input type="text" th:field="*{city}"/><br>
+
+
+            <button type="submit" class="btn btn-primary">Add</button>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
