@@ -10,39 +10,86 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="p-3">
-        <div class="card">
-            <div class="card-header">Request an Appointment with <span th:text="${appointment.doctor.name}"></span></div>
-            <div class="card-body">
-                <form th:action="@{/request-appointment/{doctorId}(doctorId=${appointment.doctor.id})}" method="post">
-                    <div class="form-group">
-                        <label for="nom">Your Name</label>
-                        <input type="text" class="form-control" id="nom" name="nom" required minlength="4" maxlength="20">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Your Email</label>
-                        <input type="email" class="form-control" id="email" name="email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Your Phone Number</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="dateNaissance">Your date of birth</label>
-                        <input type="date" class="form-control" id="dateNaissance" name="dateNaissance" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="date">Preferred Date of Appointment</label>
-                        <input type="datetime-local" class="form-control" id="date" name="date" required>
-                    </div>
+
+    <p class="h1">Request an Appointment with <span th:text="${appointment.doctor.name}"></span></p>
+
+    <form class="form-inline" th:action="@{/request-appointment/{doctorId}(doctorId=${appointment.doctor.id})}" method="post">
+        <div class="login-page">
+            <div class="form">
+                <form class="login-form">
+                    <input type="text" id="nom" name="nom" minlength="4" maxlength="20" placeholder="Full Name" required />
+                    <input type="email" id="email" name="email" placeholder="Email" required />
+                    <input type="tel"  id="phone" name="phone" placeholder="Phone Number" required />
+                    <label>Date Of Birth</label>
+                    <input type="date"  id="dateNaissance" name="dateNaissance" required>
+                    <label>Appointment Date</label>
+                    <input type="datetime-local" id="date" name="date" required>
+
                     <input type="hidden" name="doctorId" th:value="${appointment.doctor.id}">
                     <input type="hidden" name="patientId" th:value="${appointment.patient.id}">
 
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit">Submit</button>
                 </form>
             </div>
         </div>
-    </div>
+    </form>
+</div>
+
+
 </div>
 </body>
 </html>
+
+<style>
+    .login-page {
+        width: 360px;
+        padding: 8% 0 0;
+        margin: auto;
+    }
+    .form {
+        position: relative;
+        z-index: 1;
+        background: #ffffff;
+        max-width: 360px;
+        margin: 0 auto 100px;
+        padding: 45px;
+        text-align: center;
+        box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+    }
+    .form input {
+        font-family: "Roboto", sans-serif;
+        outline: 0;
+        background: #f2f2f2;
+        width: 100%;
+        border: 0;
+        margin: 0 0 15px;
+        padding: 15px;
+        box-sizing: border-box;
+        font-size: 14px;
+    }
+    .form button {
+        font-family: "Roboto", sans-serif;
+        text-transform: uppercase;
+        outline: 0;
+        background: #4caf50;
+        width: 100%;
+        border: 0;
+        padding: 15px;
+        color: #ffffff;
+        font-size: 14px;
+        cursor: pointer;
+    }
+    .form button:hover,
+    .form button:active,
+    .form button:focus {
+        background: #43a047;
+    }
+    body{
+        background: #43a047;
+    }
+    .h1{
+        font-family: "Roboto", sans-serif;
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>

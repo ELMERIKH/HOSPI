@@ -7,58 +7,127 @@
     <meta charset="UTF-8">
     <title>appointments</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-
 </head>
 <body>
 <div layout:fragment="content">
-    <div class="p-3">
-        <div class="card">
-            <div class="card-header">Liste des Requetes</div>
-            <div class="card-body">
 
+    <div class="table-title">
+        <h3>Liste des Requetes</h3>
+    </div>
+    <table class="table-fill">
+        <thead>
+        <tr>
+            <th>Appointment ID</th>
+            <th>Doctor</th>
+            <th>Patient</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Accepted</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+        </thead>
 
-                <table>
-                    <thead>
-                    <tr>
-                        <th>Appointment ID</th>
-                        <th>Doctor</th>
-                        <th>Patient</th>
-                        <th>Start Time</th>
-                        <th>End Time</th>
-                        <th>Accepted</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <!-- Loop through the appointments and display each one -->
-                    <th:block th:each="appointment : ${appointments}">
-                        <tr>
-                            <td th:text="${appointment.id}"></td>
-                            <td th:text="${appointment.doctor.name}"></td>
-                            <td th:text="${appointment.patient.nom}"></td>
-                            <td th:text="${appointment.startTime}"></td>
-                            <td th:text="${appointment.endTime}"></td>
-                            <td th:text="${appointment.accepted}"></td>
-                            <td th:text="${appointment.status}"></td>
-                            <td>
+        <tbody class="table-hover">
+        <!-- Loop through the appointments and display each one -->
+        <th:block th:each="appointment : ${appointments}">
+            <tr>
+                <td class="text-left" th:text="${appointment.id}"></td>
+                <td class="text-left" th:text="${appointment.doctor.name}"></td>
+                <td class="text-left" th:text="${appointment.patient.nom}"></td>
+                <td class="text-left" th:text="${appointment.startTime}"></td>
+                <td class="text-left" th:text="${appointment.endTime}"></td>
+                <td class="text-left" th:text="${appointment.accepted}"></td>
+                <td class="text-left" th:text="${appointment.status}"></td>
+                <td>
+                    <form method="post" th:action="@{/doctors/appointments/{id}/accept(id=${appointment.id})}">
+                        <button type="submit" class="btn btn-success">Accept</button>
+                    </form>
+                    <form method="post" th:action="@{/doctors/appointments/{id}/deny(id=${appointment.id})}">
+                        <button type="submit" class="btn btn-danger">Deny</button>
+                    </form>
+                </td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>
 
-                                <form method="post" th:action="@{/doctors/appointments/{id}/accept(id=${appointment.id})}">
-                                    <button type="submit" class="btn btn-success">Accept</button>
-                                </form> </td>
-                            <td> <form method="post" th:action="@{/doctors/appointments/{id}/deny(id=${appointment.id})}">
-                                    <button type="submit" class="btn btn-danger">Deny</button>
-                                </form>
-                            </td>
-                        </tr>
-                    </th:block>
-                    </tbody>
-                </table>
-
-            </div>
-        </div>
-</div>
 </div>
 </body>
 </html>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100);
+
+    body {
+        background: #43a047;
+        font-family: "Roboto", helvetica, arial, sans-serif;
+        font-size: 16px;
+        font-weight: 400;
+        text-rendering: optimizeLegibility;
+    }
+
+    div.table-title {
+        display: block;
+        margin: auto;
+        padding: 5px;
+    }
+
+    .table-title h3 {
+        color: #fafafa;
+        font-size: 30px;
+        font-weight: 400;
+        font-style: normal;
+        font-family: "Roboto", helvetica, arial, sans-serif;
+        text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+        text-transform: uppercase;
+    }
+
+    /*** Table Styles **/
+
+    .table-fill {
+        background: white;
+        border-radius: 3px;
+        border-collapse: collapse;
+        height: 320px;
+        padding: 5px;
+        width: 100%;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+        animation: float 5s infinite;
+    }
+
+    th {
+        color: #d5dde5;
+        background: #1b1e24;
+        border-bottom: 4px solid #9ea7af;
+        border-right: 1px solid #343a45;
+        font-size: 23px;
+        font-weight: 100;
+        padding: 24px;
+        text-align: left;
+        text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        vertical-align: middle;
+    }
+
+    tr {
+        border-top: 1px solid #c1c3d1;
+        border-bottom-: 1px solid #c1c3d1;
+        color: #666b85;
+        font-size: 16px;
+        font-weight: normal;
+        text-shadow: 0 1px 1px rgba(256, 256, 256, 0.1);
+    }
+
+    td {
+        background: #ffffff;
+        padding: 20px;
+        text-align: left;
+        vertical-align: middle;
+        font-weight: 300;
+        font-size: 18px;
+        text-shadow: -1px -1px 1px rgba(0, 0, 0, 0.1);
+        border-right: 1px solid #c1c3d1;
+    }
+
+</style>
 
