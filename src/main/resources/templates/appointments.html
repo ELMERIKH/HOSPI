@@ -43,10 +43,10 @@
                             <td th:text="${appointment.status}"></td>
                             <td>
 
-                                <form method="post" th:action="@{/doctors/appointments/{id}/accept(id=${appointment.id})}">
+                                <form method="post" th:action="@{/doctors/{Did}/appointments/{id}/accept(id=${appointment.id},Did=${appointment.doctorId})}">
                                     <button type="submit" class="btn btn-success">Accept</button>
                                 </form> </td>
-                            <td> <form method="post" th:action="@{/doctors/appointments/{id}/deny(id=${appointment.id})}">
+                            <td> <form method="post" th:action="@{/doctors/{Did}/appointments/{id}/deny(id=${appointment.id},Did=${appointment.doctorId})}">
                                     <button type="submit" class="btn btn-danger">Deny</button>
                                 </form>
                             </td>

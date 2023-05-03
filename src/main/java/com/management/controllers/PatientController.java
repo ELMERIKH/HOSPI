@@ -102,7 +102,7 @@ public class PatientController {
         return "appointment-request-form";
     }
     @PostMapping("/request-appointment/{doctorId}")
-    public String submitAppointmentRequestForm(@RequestParam("nom") String name,
+    public String submitAppointmentRequestForm(@PathVariable("doctorId")Long doctorId,@RequestParam("nom") String name,
                                                @RequestParam("email") String email,
                                                @RequestParam("dateNaissance") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateNaissance,
                                                @RequestParam("phone") long phone,
@@ -115,10 +115,15 @@ public class PatientController {
         patient.setNom(name);
         patient.setEmail(email);
         patient.setPhone(phone);
+       Doctor doctor= doctorService.getDoctorById(doctorId);
+        patient.setDoctor(doctor);
+
         patient.setDateNaissance(dateNaissance);
         // set other properties as needed
         patientRepository.save(patient);
-
+        long id=doctorId;
+        long iid =patient.getId();
+        doctorService.addPatientToDoctor(id, iid);
         appointment.setPatient(patient);
         appointment.setStartTime(dateTime);
         patientBookingServiceImpl.bookAppointment(appointment);

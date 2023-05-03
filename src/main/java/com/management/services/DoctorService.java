@@ -2,10 +2,13 @@ package com.management.services;
 
 import com.management.entities.Appointment;
 import com.management.entities.Doctor;
+import com.management.entities.Patient;
 import com.management.repositories.AppointmentRepository;
 import com.management.repositories.DoctorRepository;
+import com.management.repositories.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +19,8 @@ import java.util.Optional;
 public class DoctorService {
     @Autowired
     private DoctorRepository doctorRepository;
-
+@Autowired
+private PatientRepository patientRepository;
     public List<Doctor> findDoctorsByCityAndSpecialty(String city,String specialty){
         return doctorRepository.findDoctorsByCityAndSpecialty(city,specialty);
     }
@@ -59,7 +63,21 @@ public class DoctorService {
         appointment.setStatus(status);
         appointmentRepository.save(appointment);
     }
+    public void addPatientToDoctor(Long doctorId, Long patientId) {
+        // Retrieve the doctor object from the database
+        Doctor doctor = doctorRepository.findById(doctorId).orElse(null);
 
+        // Retrieve the patient object from the database
+        Patient patient = patientRepository.findById(patientId).orElse(null);
+        patient.setDoctor(doctor);
+        // Add the patient to the doctor's list of patients
+        if (doctor != null && patient != null) {
+            List<Patient> p=doctor.getPatients();
+            p.add(patient);
+           doctor.setPatients(p);
+            doctorRepository.save(doctor);
+        }
+    }
 
     public void acceptAppointment(Long appointmentId) {
         Optional<Appointment> appointment = appointmentRepository.findById(appointmentId);

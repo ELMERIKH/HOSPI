@@ -13,10 +13,10 @@ public class Doctor {
     private String name;
     private String email;
     private String image;
+    @OneToMany(mappedBy = "doctorId", cascade = CascadeType.ALL)
+    private List<Appointment> appointments ;
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    private List<Appointment> appointments = new ArrayList<>();
-    @OneToMany(mappedBy = "id", cascade = CascadeType.ALL)
-    private List<Patient> Patients = new ArrayList<>();
+    private List<Patient> Patients ;
 
     private String specialty;
 
@@ -51,7 +51,7 @@ public class Doctor {
         this.name = name;
         this.email = email;
         this.appointments = appointments;
-        Patients = patients;
+        this.Patients = patients;
         this.specialty = specialty;
         this.city = city;
         this.image=image;

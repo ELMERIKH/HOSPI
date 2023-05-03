@@ -21,4 +21,6 @@ public interface PatientBookingService {
     Appointment rejectAppointment(Long appointmentId);
 
     List<Appointment> getPendingAppointmentsForDoctor(Long doctorId);
+
+    List<Appointment> getAcceptedAppointmentsForDoctor(Long doctorId);
 }

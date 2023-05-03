@@ -1,17 +1,13 @@
 package com.management.entities;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 public class Patient {
@@ -25,12 +21,21 @@ public class Patient {
             min = 4,
             max = 20
     ) String nom;
+
     @Temporal(TemporalType.DATE)
     private Date dateNaissance;
     private boolean malade;
     private  String Type;
     private String email;
     private long phone;
+
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+    @ManyToOne
+    @JoinColumn(name = "doctor")
+    private Doctor doctor;
 
     public String getEmail() {
         return email;
@@ -85,6 +90,10 @@ public class Patient {
         this.Type = type;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nom, dateNaissance, malade, Type, email, phone);
+    }
 
     public void setDateNaissance(final Date dateNaissance) {
         this.dateNaissance = dateNaissance;
@@ -165,6 +174,9 @@ public class Patient {
         this.dateNaissance = dateNaissance;
         this.malade = malade;
         this.Type=Type;
+    }
+
+    public void setDoctor(Doctor doctor) {
     }
 
     public static class PatientBuilder {

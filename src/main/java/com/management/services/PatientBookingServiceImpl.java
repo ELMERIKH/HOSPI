@@ -91,4 +91,11 @@ public class PatientBookingServiceImpl implements PatientBookingService {
 
         return appointmentRepository.findByDoctorAndStatus(doctor, "PENDING");
     }
+    @Override
+    public List<Appointment> getAcceptedAppointmentsForDoctor(Long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Doctor not found","",""));
+
+        return appointmentRepository.findByDoctorAndStatus(doctor, "ACCEPTED");
+    }
 }

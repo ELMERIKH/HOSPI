@@ -2,6 +2,7 @@ package com.management.controllers;
 
 import com.management.entities.*;
 import com.management.repositories.DoctorRepository;
+import com.management.repositories.PatientRepository;
 import com.management.services.DoctorService;
 import com.management.services.PatientBookingService;
 import com.management.services.PatientBookingServiceImpl;
@@ -26,7 +27,8 @@ public class DoctorController {
 private DoctorRepository doctorRepository;
     @Autowired
     private PatientBookingServiceImpl patientBookingServiceImpl;
-
+@Autowired
+private PatientRepository patientRepository;
     @Autowired
     public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
@@ -45,7 +47,7 @@ private DoctorRepository doctorRepository;
     @GetMapping("/{id}/appointments")
     public String showAppointments(@PathVariable("id") Long doctorId, Model model) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
-        List<Appointment> appointments = doctor.getAppointments();
+        List<Appointment> appointments = patientBookingServiceImpl.getPendingAppointmentsForDoctor(doctorId);
         model.addAttribute("doctor", doctor);
         model.addAttribute("appointments", appointments);
         return "appointments";
@@ -58,11 +60,16 @@ private DoctorRepository doctorRepository;
         return "redirect:/doctors/{id}/appointments";
     }
     @GetMapping("/{id}/patients")
-    public String showPatients(@PathVariable("id") Long doctorId, Model model) {
+    public String showPatients(@PathVariable("id") Long doctorId,Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "10") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
+        Page<Patient> pagePatients = this.patientRepository.findByNomContains(kw, PageRequest.of(page, size));
+
         List<Patient> patients = doctor.getPatients();
         model.addAttribute("doctor", doctor);
         model.addAttribute("patients", patients);
+        model.addAttribute("pages", new int[pagePatients.getTotalPages()]);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", kw);
         return "patients";
     }
     @GetMapping("/add")
@@ -93,28 +100,29 @@ private DoctorRepository doctorRepository;
         return "appointment-details";
     }
 
-    @PostMapping("/appointments/{id}/accept")
-    public String acceptAppointment(@PathVariable("id") Long id) {
+    @PostMapping("{Did}/appointments/{id}/accept")
+    public String acceptAppointment(@PathVariable("Did") Long doctorId, @PathVariable("id") Long id) {
         patientBookingServiceImpl.acceptAppointment(id);
-
-        return "redirect:/doctors/appointments";
+        Appointment appointment = patientBookingServiceImpl.getAppointmentById(id).get();
+        Long patientId = appointment.getPatientId();
+        doctorService.addPatientToDoctor(doctorId, patientId);
+        return "redirect:/doctors/{Did}/appointments";
     }
-
-    @PostMapping("/appointments/{id}/deny")
-    public String denyAppointment(@PathVariable("id") Long id) {
+    @PostMapping("{Did}/appointments/{id}/deny")
+    public String denyAppointment(@PathVariable("Did") Long doctorId,@PathVariable("id") Long id) {
         patientBookingServiceImpl.rejectAppointment(id);
-        return "redirect:/doctors/appointments";
+        return "redirect:/doctors/{Did}/appointments";
     }
-    @GetMapping("/calendar")
-    public String showCalendar(Model model) {
+    @GetMapping("/calendar/{id}")
+    public String showCalendar(Model model,@PathVariable("id") Long doctorId) {
 
-
+        model.addAttribute("id",doctorId);
         return "Calendar"; // Return the name of the calendar view template
     }
-    @GetMapping("/events")
+    @GetMapping("/events/{id}")
     @ResponseBody
-    public List<Map<String, Object>> getEvents() {
-        List<Appointment> appointments = patientBookingServiceImpl.getAllAppointments();
+    public List<Map<String, Object>> getEvents(@PathVariable("id") Long doctorId) {
+        List<Appointment> appointments = patientBookingServiceImpl.getAcceptedAppointmentsForDoctor(doctorId);
         List<Map<String, Object>> calendarEvents = new ArrayList<>();
 
         for (Appointment appointment : appointments) {
