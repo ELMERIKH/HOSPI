@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template.html"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>appointments</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+
+</head>
+<body>
+<div layout:fragment="content">
+    <div class="p-3">
+        <div class="card">
+            <div class="card-header">Liste des Requetes</div>
+            <div class="card-body">
+
+
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Doctor</th>
+                        <th>Patient</th>
+                        <th>Start Time</th>
+                        <th>End Time</th>
+                        <th>Accepted</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Loop through the appointments and display each one -->
+                    <th:block th:each="appointment : ${appointments}">
+                        <tr>
+                            <td th:text="${appointment.id}"></td>
+                            <td th:text="${appointment.doctor.name}"></td>
+                            <td th:text="${appointment.patient.nom}"></td>
+                            <td th:text="${appointment.startTime}"></td>
+                            <td th:text="${appointment.endTime}"></td>
+                            <td th:text="${appointment.accepted}"></td>
+                            <td th:text="${appointment.status}"></td>
+                            <td>
+
+                                <form method="post" th:action="@{/doctors/appointments/{id}/accept(id=${appointment.id})}">
+                                    <button type="submit" class="btn btn-success">Accept</button>
+                                </form> </td>
+                            <td> <form method="post" th:action="@{/doctors/appointments/{id}/deny(id=${appointment.id})}">
+                                    <button type="submit" class="btn btn-danger">Deny</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+</div>
+</div>
+</body>
+</html>
+

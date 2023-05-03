@@ -6,18 +6,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Patients Patients</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+
 </head>
 <body>
   <div layout:fragment="content">
     <div class="p-3">
       <div class="card">
-<<<<<<< HEAD
-        <div class="card-header">List Of Cars</div>
-=======
         <div class="card-header">Liste des patients</div>
->>>>>>> origin/master
         <div class="card-body">
-          <form method="get" th:href="@{list}">
+          <form method="get" th:href="@{index}">
             <ul class="nav nav-pills">
               <li>
                 <label class="form-label">Keyword:</label>
@@ -35,22 +33,16 @@
           <table class="table">
             <thead>
             <tr>
-              <th>ID</th>
-              <th>Name</th>
-              <th>Model</th>
-              <th>Year</th>
-              <th>Color</th>
-              <th>Price</th>
+              <th>ID</th><th>Nom</th><th>Date</th><th>Type</th><th>Malade</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="car : ${cars}">
-              <td th:text="${car.id} "></td>
-              <td th:text="${car.make} "></td>
-              <td th:text="${car.model} "></td>
-              <td th:text="${car.year}"></td>
-              <td th:text="${car.color}"></td>
-              <td th:text="${car.price}+' $'">
+            <tr th:each="p:${listPatients}">
+              <td th:text="${p.id}"></td>
+              <td th:text="${p.nom}"></td>
+              <td th:text="${p.dateNaissance}"></td>
+              <td th:text="${p.malade}"></td>
+              <td th:text="${p.Type}"></td>
               <td>
                 <a onclick="return confirm('Etes vous sûre?')" class="btn btn-danger"
                    th:href="@{deletePatient(id=${p.id}, keyword=${keyword}, page=${currentPage})}">
@@ -59,7 +51,7 @@
               </td>
               <td>
                 <a  class="btn btn-danger"
-                   th:href="@{editCar(id=${p.id})}">
+                   th:href="@{editPatient(id=${p.id})}">
                   <i class="bi bi-pencil"></i>
                 </a>
               </td>
