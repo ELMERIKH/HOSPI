@@ -2,7 +2,6 @@ package com.management.entities;
 
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 
@@ -29,13 +28,27 @@ public class Patient {
     private String email;
     private long phone;
 
+    public Patient() {
+
+    }
+
     public Doctor getDoctor() {
         return doctor;
     }
+    public void setDoctor(Doctor doctor) {
+         this.doctor=doctor;
+
+    }
 
     @ManyToOne
-    @JoinColumn(name = "doctor")
+    @JoinColumn(name = "doctor_id")
     private Doctor doctor;
+
+
+
+
+
+
 
     public String getEmail() {
         return email;
@@ -165,19 +178,22 @@ public class Patient {
         return "Patient(id=" + var10000 + ", nom=" + this.getNom() + ", dateNaissance=" + String.valueOf(this.getDateNaissance()) + ", malade=" + this.isMalade() + ", type=" + this.getType() + ")";
     }
 
-    public Patient() {
+    public Patient(Doctor doctor) {
+        this.doctor = doctor;
+
     }
 
-    public Patient(final Long id, final String nom, final Date dateNaissance, final boolean malade,  final String Type) {
+    public Patient(final Long id, final String nom, final Date dateNaissance, final boolean malade, final String Type, Doctor doctor) {
         this.id = id;
         this.nom = nom;
         this.dateNaissance = dateNaissance;
         this.malade = malade;
         this.Type=Type;
+        this.doctor = doctor;
+
     }
 
-    public void setDoctor(Doctor doctor) {
-    }
+
 
     public static class PatientBuilder {
         private Long id;
@@ -215,7 +231,7 @@ public class Patient {
         }
 
         public Patient build() {
-            return new Patient(this.id, this.nom, this.dateNaissance, this.malade, this.Type);
+            return new Patient(this.id, this.nom, this.dateNaissance, this.malade, this.Type, this.build().doctor);
         }
 
         public String toString() {

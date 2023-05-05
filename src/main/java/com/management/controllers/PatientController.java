@@ -4,6 +4,7 @@ package com.management.controllers;
 import com.management.entities.Appointment;
 import com.management.entities.Doctor;
 import com.management.entities.Patient;
+import com.management.repositories.DoctorRepository;
 import com.management.repositories.PatientRepository;
 import com.management.services.DoctorService;
 import com.management.services.PatientBookingServiceImpl;
@@ -18,10 +19,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class PatientController {
@@ -31,6 +30,8 @@ public class PatientController {
     private PatientBookingServiceImpl patientBookingServiceImpl;
     @Autowired
     private DoctorService doctorService;
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     public PatientController() {
     }
@@ -101,6 +102,7 @@ public class PatientController {
 
         return "appointment-request-form";
     }
+
     @PostMapping("/request-appointment/{doctorId}")
     public String submitAppointmentRequestForm(@PathVariable("doctorId")Long doctorId,@RequestParam("nom") String name,
                                                @RequestParam("email") String email,
@@ -115,15 +117,12 @@ public class PatientController {
         patient.setNom(name);
         patient.setEmail(email);
         patient.setPhone(phone);
-       Doctor doctor= doctorService.getDoctorById(doctorId);
-        patient.setDoctor(doctor);
 
         patient.setDateNaissance(dateNaissance);
-        // set other properties as needed
+
         patientRepository.save(patient);
-        long id=doctorId;
-        long iid =patient.getId();
-        doctorService.addPatientToDoctor(id, iid);
+
+
         appointment.setPatient(patient);
         appointment.setStartTime(dateTime);
         patientBookingServiceImpl.bookAppointment(appointment);

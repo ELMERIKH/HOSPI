@@ -14,8 +14,13 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 
 public class SecurityConfig {
+
+
+
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+
     @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         return new InMemoryUserDetailsManager(
@@ -25,8 +30,19 @@ public class SecurityConfig {
     }
     @Bean
 public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws  Exception{
-        httpSecurity.formLogin();
-    httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
+
+
+        httpSecurity.formLogin().loginPage("/login").defaultSuccessUrl("/home", true)
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll();;
+    httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER");
+        httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
+
+        httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
+        httpSecurity.exceptionHandling().accessDeniedPage("/notAuthorized");
+
     return  httpSecurity.build();
 }
 }

@@ -1,15 +1,25 @@
 package com.management.repositories;
 
+import com.management.entities.Car;
+import com.management.entities.Doctor;
 import com.management.entities.Patient;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 
-
+@Repository
     public interface PatientRepository extends JpaRepository<Patient, Long> {
         Page<Patient> findByNomContains(String kw, Pageable pageable);
-        Patient getPatientsById(long patientId);
-    }
+    @NotNull Page<Patient> findAll(@NotNull Pageable pageable);
+    Page<Patient> findByNomContainsAndDoctor(String keyword, Doctor doctor, Pageable pageable);
+    Patient getPatientsById(long patientId);
+
+    Page<Patient> getPatientsByDoctorId(Long doctorId, Pageable pageable);
+}
 
 

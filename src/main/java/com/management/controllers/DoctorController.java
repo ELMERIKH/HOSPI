@@ -60,16 +60,25 @@ private PatientRepository patientRepository;
         return "redirect:/doctors/{id}/appointments";
     }
     @GetMapping("/{id}/patients")
-    public String showPatients(@PathVariable("id") Long doctorId,Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "10") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
+    public String showPatients(@PathVariable("id") Long doctorId,Model model, @RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String keyword) {
         Doctor doctor = doctorService.getDoctorById(doctorId);
-        Page<Patient> pagePatients = this.patientRepository.findByNomContains(kw, PageRequest.of(page, size));
+        List<Patient> patients ;
+        Pageable pageable = PageRequest.of(page, 8); // page size of 8
 
-        List<Patient> patients = doctor.getPatients();
+        Page<Patient> pagePatients ;
+        if (keyword != null && !keyword.isEmpty()) {
+            pagePatients = patientRepository.findByNomContainsAndDoctor(keyword, doctor, pageable);
+            patients = pagePatients.getContent();
+        }else {
+            pagePatients = doctorService.getPatientsByDoctorId(doctorId, pageable);
+            patients = pagePatients.getContent();
+        }
         model.addAttribute("doctor", doctor);
         model.addAttribute("patients", patients);
-        model.addAttribute("pages", new int[pagePatients.getTotalPages()]);
-        model.addAttribute("currentPage", page);
-        model.addAttribute("keyword", kw);
+        model.addAttribute("Page", pagePatients);
+
+        model.addAttribute("keyword", keyword);
+
         return "patients";
     }
     @GetMapping("/add")
@@ -134,4 +143,5 @@ private PatientRepository patientRepository;
 
         return calendarEvents;
     }
+
 }

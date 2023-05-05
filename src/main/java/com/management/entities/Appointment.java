@@ -3,7 +3,6 @@ package com.management.entities;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 public class Appointment {
@@ -31,7 +30,7 @@ public class Appointment {
 
     // Update the constructor to set the patient ID to the ID of the patient object
     public Appointment() {
-        this.patient = new Patient();
+        this.patient = new Patient(doctor);
         this.doctor = new Doctor();
         this.patientId = this.patient.getId();
         this.doctorId = this.doctor.getId();

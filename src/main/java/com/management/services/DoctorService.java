@@ -8,6 +8,8 @@ import com.management.repositories.DoctorRepository;
 import com.management.repositories.PatientRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
@@ -69,9 +71,10 @@ private PatientRepository patientRepository;
 
         // Retrieve the patient object from the database
         Patient patient = patientRepository.findById(patientId).orElse(null);
+        assert patient != null;
         patient.setDoctor(doctor);
         // Add the patient to the doctor's list of patients
-        if (doctor != null && patient != null) {
+        if (doctor != null) {
             List<Patient> p=doctor.getPatients();
             p.add(patient);
            doctor.setPatients(p);
@@ -100,4 +103,7 @@ private PatientRepository patientRepository;
         }
     }
 
+    public Page<Patient> getPatientsByDoctorId(Long doctorId, Pageable pageable) {
+       return patientRepository.getPatientsByDoctorId(doctorId, pageable);
+    }
 }

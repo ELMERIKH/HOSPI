@@ -1,6 +1,7 @@
 package com.management.services;
 
 import com.management.entities.Appointment;
+import com.management.entities.Car;
 import com.management.entities.Doctor;
 import com.management.entities.Patient;
 import com.management.repositories.AppointmentRepository;
