@@ -11,10 +11,10 @@
 <body>
 
 <div layout:fragment="content">
-    <h1 class="title" align="center">Available Doctors</h1>
+    <h1 class="title">Available Doctors</h1>
     <div th:each="doctor : ${doctors}" class="card">
         <div class="imgBox">
-            <img class="img-fluid" th:src="${doctor.image}" alt="">
+            <img class="img-fluid" th:src="${doctor.image}" th:alt="${doctor.name}" width="220" height="200" >
         </div>
         <div class="contentBox">
             <h3 th:text="${doctor.name}"></h3>
@@ -39,7 +39,7 @@
     .card {
         display : inline-block;
         margin: 6px;
-        position: center;
+        position: absolute;
         width: 320px;
         height: 450px;
         background: #5ea85f;
@@ -47,7 +47,6 @@
         box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
 
     }
-
 
     .card .contentBox {
         text-transform: uppercase;
@@ -57,7 +56,6 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        z-index: 2;
     }
 
     .card .contentBox h3 {
@@ -84,8 +82,5 @@
         background: #13a8cb;
         text-transform: uppercase;
     }
-
-
-
 
 </style>

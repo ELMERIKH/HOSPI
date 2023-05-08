@@ -44,10 +44,6 @@ public class CarController {
     }
 
 
-    @GetMapping("/")
-    public List<Car> getAllCars() {
-        return carService.getAllCars();
-    }
 
     @GetMapping("/car/{id}")
     public ResponseEntity<Car> getCarById(@PathVariable(value = "id") Long id) {
@@ -66,10 +62,6 @@ public class CarController {
         return carService.getCarsByMake(make);
     }
 
-    @PostMapping("/")
-    public Car createCar(@RequestBody Car car) {
-        return carService.createCar(car);
-    }
 
     @PostMapping("edit/{id}")
     public ModelAndView updateCar(@PathVariable(value = "id") Long id,  Car carDetails) {

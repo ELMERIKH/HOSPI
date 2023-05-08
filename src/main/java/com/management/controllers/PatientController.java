@@ -35,19 +35,24 @@ public class PatientController {
 
     public PatientController() {
     }
-    @GetMapping({"/home"})
+    @GetMapping({"/user/home"})
     public String index() {
 
         return "Home";
     }
-    @GetMapping({"/index"})
+    @GetMapping({"/"})
+    public String home() {
+
+        return "redirect:/user/home";
+    }
+    @GetMapping({"admin/index"})
     public String index(Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "5") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Page<Patient> pagePatients = this.patientRepository.findByNomContains(kw, PageRequest.of(page, size));
         model.addAttribute("listPatients", pagePatients.getContent());
         model.addAttribute("pages", new int[pagePatients.getTotalPages()]);
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", kw);
-        return "patients";
+        return "allPatients";
     }
 
     @GetMapping({"/deletePatient"})
