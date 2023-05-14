@@ -109,7 +109,7 @@ private PatientRepository patientRepository;
         return "appointment-details";
     }
 
-    @PostMapping("/doctors{Did}/appointments/{id}/accept")
+    @PostMapping("/doctors/{Did}/appointments/{id}/accept")
     public String acceptAppointment(@PathVariable("Did") Long doctorId, @PathVariable("id") Long id) {
         patientBookingServiceImpl.acceptAppointment(id);
         Appointment appointment = patientBookingServiceImpl.getAppointmentById(id).get();
@@ -117,7 +117,7 @@ private PatientRepository patientRepository;
         doctorService.addPatientToDoctor(doctorId, patientId);
         return "redirect:/doctors/{Did}/appointments";
     }
-    @PostMapping("/doctors{Did}/appointments/{id}/deny")
+    @PostMapping("/doctors/{Did}/appointments/{id}/deny")
     public String denyAppointment(@PathVariable("Did") Long doctorId,@PathVariable("id") Long id) {
         patientBookingServiceImpl.rejectAppointment(id);
         return "redirect:/doctors/{Did}/appointments";
