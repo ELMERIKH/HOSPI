@@ -21,7 +21,7 @@ public class MainApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(MainApplication.class, args);}
-//@Bean
+@Bean
 CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManager){
         PasswordEncoder passwordEncoder =passwordEncoder();
         return args -> {
