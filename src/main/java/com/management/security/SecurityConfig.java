@@ -35,12 +35,12 @@ public UserDetailsService userDetailsService(){
         }
     };
 }
-@Bean
+//@Bean
 public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){
 
     return new JdbcUserDetailsManager(dataSource);
 }
-    //@Bean
+    @Bean
     public InMemoryUserDetailsManager inMemoryUserDetailsManager(){
         return new InMemoryUserDetailsManager(
         User.withUsername("user1").password(passwordEncoder.encode("123")).roles("USER").build(),
