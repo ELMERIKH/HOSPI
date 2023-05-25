@@ -42,7 +42,7 @@ public class PatientController {
 
     public PatientController() {
     }
-    @GetMapping({"/user/home"})
+    @GetMapping({"/home"})
     public String index() {
 
         return "Home";
@@ -50,9 +50,9 @@ public class PatientController {
     @GetMapping({"/"})
     public String home() {
 
-        return "redirect:/user/home";
+        return "redirect:/home";
     }
-    @GetMapping({"admin/index"})
+    @GetMapping({"admin/patients"})
     public String index(Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "5") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Page<Patient> pagePatients = this.patientRepository.findByNomContains(kw, PageRequest.of(page, size));
         model.addAttribute("listPatients", pagePatients.getContent());
@@ -154,19 +154,5 @@ else {
 
         return "redirect:/doctors/appointments";
     }
-    @GetMapping("/appointments/new")
-    public String showNewAppointmentForm(Model model) {
-        Appointment appointment = new Appointment();
-        model.addAttribute("appointment", appointment);
-        return "new-appointment-form";
-    }
 
-    @PostMapping("/appointments/new")
-    public String submitNewAppointmentForm(@ModelAttribute("appointmentRequest") Appointment appointment, BindingResult result) {
-        if (result.hasErrors()) {
-            return "new-appointment-form";
-        }
-        patientBookingServiceImpl.bookAppointment(appointment);
-        return "redirect:/patients/appointments";
-    }
 }

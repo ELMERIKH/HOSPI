@@ -4,6 +4,7 @@ package com.management;
 import com.management.entities.Doctor;
 import com.management.entities.Patient;
 import com.management.repositories.PatientRepository;
+import com.management.services.UserDetailServicesImpl;
 import com.management.services.UserserviceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -53,10 +54,23 @@ CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManage
         PasswordEncoder passwordEncoder =passwordEncoder();
         return args -> {
 
-
+            com.management.entities.User u1= userservice.loadUserByUsername("admin");
+            if (u1==null){
             userservice.saveAdmin("admin","admin@gmail.com", "12345");
 
+            }
+            com.management.entities.User u2= userservice.loadUserByUsername("DRmoncef");
+            if (u2==null){
+                Doctor doctor=new Doctor("DRmoncef","moncef@gmail.com");
+                userservice.saveDocter("DRmoncef","moncef@gmail.com", "12345", doctor);
 
+            }
+            com.management.entities.User u3= userservice.loadUserByUsername("patient1");
+            if (u3==null){
+                Patient patient=new Patient("patient1","mmmmmm@gmail.com");
+                userservice.saveUser("patient1","mmmmmm@gmail.com", "12345", patient);
+
+            }
 
 
 

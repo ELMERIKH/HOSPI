@@ -93,7 +93,7 @@ Role role1=new Role(role);
     }
 
     @Override
-    public User loadUserByUsername(String username) {
+    public  User loadUserByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
