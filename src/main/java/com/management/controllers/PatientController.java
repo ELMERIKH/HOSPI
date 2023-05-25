@@ -52,7 +52,7 @@ public class PatientController {
 
         return "redirect:/home";
     }
-    @GetMapping({"admin/patients"})
+    @GetMapping({"admin/doctors/patients"})
     public String index(Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "5") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Page<Patient> pagePatients = this.patientRepository.findByNomContains(kw, PageRequest.of(page, size));
         model.addAttribute("listPatients", pagePatients.getContent());

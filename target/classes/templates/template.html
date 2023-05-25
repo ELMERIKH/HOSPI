@@ -29,10 +29,16 @@
                 <a class="nav-link active" th:href="@{/home}">Home</a>
             </li>
             <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_DOCTOR'')')}">
-                <a class="nav-link active" th:href="@{/doctors/appointments}">Appointments</a>
+                <a class="nav-link active" th:href="@{${#authorization.expression('hasRole(''ROLE_ADMIN'')') ? '/admin/doctors/appointments' : '/doctors/appointments'}}">Appointments</a>
             </li>
             <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_DOCTOR'')')}">
+                <a class="nav-link active" th:href="@{${#authorization.expression('hasRole(''ROLE_ADMIN'')') ? '/admin/doctors/patients' : '/doctors/patients'}}">Patients</a>
+            </li>
+            <li class="nav-item" th:if="!${#authorization.expression('hasRole(''ROLE_PATIENT'')')}">
                 <a class="nav-link active" th:href="@{/doctors/calendar}">Calendar</a>
+            </li>
+            <li class="nav-item" th:if="${#authorization.expression('hasRole(''ROLE_ADMIN'')')}">
+                <a class="nav-link active" th:href="@{/doctors/list}">Doctors</a>
             </li>
         </ul>
 

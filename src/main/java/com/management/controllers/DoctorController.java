@@ -37,7 +37,7 @@ private PatientRepository patientRepository;
     public DoctorController(DoctorService doctorService) {
         this.doctorService = doctorService;
     }
-    @GetMapping({"/doctors/index"})
+    @GetMapping({"/admin/doctors/list"})
     public String index(Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "10") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Page<Doctor> pagePatients = this.doctorRepository.findByNameContains(kw, PageRequest.of(page, size));
         model.addAttribute("listDoctors", pagePatients.getContent());
@@ -57,7 +57,7 @@ private PatientRepository patientRepository;
 
 
             model.addAttribute("id", doctorId);
-            // Return the name of the calendar view template
+
 
         Doctor doctor = doctorService.getDoctorById(doctorId);
         List<Appointment> appointments = patientBookingServiceImpl.getPendingAppointmentsForDoctor(doctorId);
@@ -74,9 +74,17 @@ private PatientRepository patientRepository;
         doctorService.updateAppointmentStatus(doctorId, appointmentId, status);
         return "redirect:/doctors/appointments";
     }
-    @GetMapping("/doctors/{id}/patients")
-    public String showPatients(@PathVariable("id") Long doctorId,Model model, @RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String keyword) {
-        Doctor doctor = doctorService.getDoctorById(doctorId);
+    @GetMapping("/doctors/patients")
+    public String showPatients(Model model, @RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String keyword) {
+        User currentUser = getCurrentUser();
+
+        if (currentUser!=null) {
+            Long doctorId = currentUser.getDoctorId();
+
+
+            model.addAttribute("id", doctorId);
+
+            Doctor doctor = doctorService.getDoctorById(doctorId);
         List<Patient> patients ;
         Pageable pageable = PageRequest.of(page, 8); // page size of 8
 
@@ -93,7 +101,7 @@ private PatientRepository patientRepository;
         model.addAttribute("Page", pagePatients);
 
         model.addAttribute("keyword", keyword);
-
+        }
         return "patients";
     }
     @GetMapping("/doctors/add")
