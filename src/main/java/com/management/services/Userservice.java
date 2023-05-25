@@ -10,9 +10,13 @@ import org.springframework.stereotype.Service;
 public interface Userservice {
   void saveUser(String username,String email, String password, Patient patient);
 
-    void saveDocter(String username, String email, String password, Doctor doctor);
+  void saveAdmin(String username,String email, String password);
+
+  void saveDocter(String username, String email, String password, Doctor doctor);
 
     Role save(String role);
     User loadUserByUsername(String username);
     void addRoleToUser(String username,String rolename,User user);
+
+  void addRoleToADMIN(String username, String[] roleName, User user);
 }

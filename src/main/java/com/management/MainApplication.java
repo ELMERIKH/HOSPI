@@ -54,6 +54,10 @@ CommandLineRunner commandLineRunner(JdbcUserDetailsManager jdbcUserDetailsManage
         return args -> {
 
 
+            userservice.saveAdmin("admin","admin@gmail.com", "12345");
+
+
+
 
 
         };

@@ -46,6 +46,24 @@ private PatientRepository patientRepository;
         userRepository.save(user);
 
     };
+    @Override
+    public void saveAdmin(String username,String email, String password) {
+
+        User user=new User();
+
+        user.setId(UUID.randomUUID().toString());
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password));
+        user.setUsername(username);
+
+
+
+
+        addRoleToADMIN(username, new String[]{"ADMIN", "DOCTOR","PATIENT"},user);
+
+        userRepository.save(user);
+
+    };
 
     @Override
     public void saveDocter(String username,String email, String password, Doctor doctor) {
@@ -92,7 +110,24 @@ Role role1=new Role(role);
 
         user.getRoles().add(role);
 
-        // Save the role using the RoleRepository
+
         roleRepository.save(role);
+    }
+    @Override
+    public void addRoleToADMIN(String username, String[] roleName, User user) {
+
+
+
+
+
+       for(String r : roleName){
+
+        Role role =new Role(r);
+
+        user.getRoles().add(role);
+           roleRepository.save(role);
+       }
+
+
     }
 }

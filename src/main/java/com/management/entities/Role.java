@@ -13,7 +13,6 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,8 +22,6 @@ public class Role {
     @Id
 
     private String roleName;
-
-
 
 
 
