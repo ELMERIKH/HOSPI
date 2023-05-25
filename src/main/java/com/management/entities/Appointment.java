@@ -26,9 +26,6 @@ public class Appointment {
     private String status ;
 
 
-    // getters and setters
-
-    // Update the constructor to set the patient ID to the ID of the patient object
     public Appointment() {
         this.patient = new Patient(doctor);
         this.doctor = new Doctor();
@@ -36,13 +33,12 @@ public class Appointment {
         this.doctorId = this.doctor.getId();
     }
 
-    // Update the setters to set the patient ID to the ID of the patient object
+
     public void setPatient(Patient patient) {
         this.patient = patient;
         this.patientId = patient.getId();
     }
 
-    // Add getters and setters for the patient ID
     public Long getPatientId() {
         return patientId;
     }

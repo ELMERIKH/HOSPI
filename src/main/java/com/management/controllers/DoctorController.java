@@ -3,19 +3,21 @@ package com.management.controllers;
 import com.management.entities.*;
 import com.management.repositories.DoctorRepository;
 import com.management.repositories.PatientRepository;
+import com.management.repositories.UserRepository;
 import com.management.services.DoctorService;
-import com.management.services.PatientBookingService;
 import com.management.services.PatientBookingServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -23,6 +25,8 @@ import java.util.*;
 public class DoctorController {
     @Autowired
     private DoctorService doctorService;
+    @Autowired
+    private UserRepository userRepository;
 @Autowired
 private DoctorRepository doctorRepository;
     @Autowired
@@ -44,12 +48,23 @@ private PatientRepository patientRepository;
     }
 
 
-    @GetMapping("/doctors/{id}/appointments")
-    public String showAppointments(@PathVariable("id") Long doctorId, Model model) {
+    @GetMapping("/doctors/appointments")
+    public String showAppointments( Model model) {
+        User currentUser = getCurrentUser();
+
+        if (currentUser!=null) {
+            Long doctorId = currentUser.getDoctorId();
+
+
+            model.addAttribute("id", doctorId);
+            // Return the name of the calendar view template
+
         Doctor doctor = doctorService.getDoctorById(doctorId);
         List<Appointment> appointments = patientBookingServiceImpl.getPendingAppointmentsForDoctor(doctorId);
         model.addAttribute("doctor", doctor);
         model.addAttribute("appointments", appointments);
+
+            }
         return "appointments";
     }
     @PostMapping("/doctors/{id}/appointments/{appointmentId}")
@@ -57,7 +72,7 @@ private PatientRepository patientRepository;
                                     @PathVariable("appointmentId") Long appointmentId,
                                     @RequestParam("status") String status) {
         doctorService.updateAppointmentStatus(doctorId, appointmentId, status);
-        return "redirect:/doctors/{id}/appointments";
+        return "redirect:/doctors/appointments";
     }
     @GetMapping("/doctors/{id}/patients")
     public String showPatients(@PathVariable("id") Long doctorId,Model model, @RequestParam(defaultValue = "0") int page,@RequestParam(required = false) String keyword) {
@@ -95,19 +110,13 @@ private PatientRepository patientRepository;
         doctorService.createDoctor(doctor);
         return new ModelAndView("redirect:/doctors/list");
     }
-    @GetMapping("/doctors/appointments")
+    @GetMapping("/admin/doctors/appointments")
     public String viewAppointments(Model model) {
         List<Appointment> appointments = patientBookingServiceImpl.getAllAppointments();
         model.addAttribute("appointments", appointments);
         return "appointments";
     }
 
-    @GetMapping("/doctors/appointments/{id}")
-    public String viewAppointmentDetails(@PathVariable("id") Long id, Model model) {
-        Optional<Appointment> appointment = patientBookingServiceImpl.getAppointmentById(id);
-        model.addAttribute("appointment", appointment);
-        return "appointment-details";
-    }
 
     @PostMapping("/doctors/{Did}/appointments/{id}/accept")
     public String acceptAppointment(@PathVariable("Did") Long doctorId, @PathVariable("id") Long id) {
@@ -115,18 +124,50 @@ private PatientRepository patientRepository;
         Appointment appointment = patientBookingServiceImpl.getAppointmentById(id).get();
         Long patientId = appointment.getPatientId();
         doctorService.addPatientToDoctor(doctorId, patientId);
-        return "redirect:/doctors/{Did}/appointments";
+        return "redirect:/doctors/appointments";
     }
     @PostMapping("/doctors/{Did}/appointments/{id}/deny")
     public String denyAppointment(@PathVariable("Did") Long doctorId,@PathVariable("id") Long id) {
         patientBookingServiceImpl.rejectAppointment(id);
-        return "redirect:/doctors/{Did}/appointments";
+        return "redirect:/doctors/appointments";
     }
-    @GetMapping("/doctors/calendar/{id}")
-    public String showCalendar(Model model,@PathVariable("id") Long doctorId) {
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
 
-        model.addAttribute("id",doctorId);
-        return "Calendar"; // Return the name of the calendar view template
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            String username = userDetails.getUsername();
+
+            // Assuming you have a service or repository to fetch the user entity based on the username
+            return userRepository.findByUsername(username);
+        }
+
+        return null; // Return null if the current user is not found or not authenticated
+    }
+
+
+    @GetMapping("/doctors/calendar")
+    public String showCalendar(Model model) {
+        User currentUser = getCurrentUser();
+
+        if (currentUser!=null) {
+            Long doctorId = currentUser.getDoctorId();
+
+
+                model.addAttribute("id", doctorId);
+                 // Return the name of the calendar view template
+            }
+
+        return "Calendar";
+    }
+   // @GetMapping("/doctors/calendar/{id}")
+    public String showCalendar(Model model,@PathVariable("id") long doctorId) {
+
+
+            model.getAttribute("id");
+
+        return "Calendar";
     }
     @GetMapping("/doctors/events/{id}")
     @ResponseBody

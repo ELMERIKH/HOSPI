@@ -32,6 +32,11 @@ public class Patient {
 
     }
 
+    public Patient(String nom, String email) {
+        this.nom=nom;
+        this.email=email;
+    }
+
     public Doctor getDoctor() {
         return doctor;
     }

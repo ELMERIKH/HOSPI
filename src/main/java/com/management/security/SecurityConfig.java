@@ -1,5 +1,6 @@
 package com.management.security;
 
+import com.management.services.UserDetailServicesImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,19 +24,20 @@ public class SecurityConfig {
 
 
 
+
+    @Autowired
+    private DataSource dataSource;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+@Autowired
+private UserDetailServicesImpl userDetailServices;
 //@Bean
-public UserDetailsService userDetailsService(){
-    return  new UserDetailsService() {
-        @Override
-        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            return null;
-        }
-    };
+public UserDetailsService jdbcUserDetailsService(DataSource dataSource) {
+    JdbcUserDetailsManager userDetailsManager = new JdbcUserDetailsManager(dataSource);
+
+    return userDetailsManager;
 }
-@Bean
+//@Bean
 public JdbcUserDetailsManager jdbcUserDetailsManager(DataSource dataSource){
 
     return new JdbcUserDetailsManager(dataSource);
@@ -57,13 +59,15 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
                 .and()
                 .logout()
                 .permitAll();;
-    httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("USER");
+    httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("PATIENT");
         httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
         httpSecurity.authorizeHttpRequests().requestMatchers("/doctors/**").hasRole("DOCTOR");
 
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         httpSecurity.exceptionHandling().accessDeniedPage("/notAuthorized");
-        httpSecurity.rememberMe();
+        httpSecurity.rememberMe().and()
+                .csrf().disable();;
+                httpSecurity.userDetailsService(userDetailServices);
     return  httpSecurity.build();
 }
 }

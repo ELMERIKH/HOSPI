@@ -3,7 +3,9 @@ package com.management.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import jakarta.jws.soap.SOAPBinding;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
@@ -11,16 +13,19 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "role")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonSerialize
+@Builder
 public class Role {
+
     @Id
-    @Column(name = "id", nullable = false)
-    private Long id;
-    private String label;
+
+    private String roleName;
+
+
+
 
 
 }

@@ -12,9 +12,10 @@ import java.util.List;
 @Repository
 public interface DoctorRepository extends JpaRepository<Doctor, Long> {
     List<Doctor> findBySpecialty(String specialty);
-    List<Doctor> findByName(String name);
+    Doctor findByName(String name);
     List <Doctor> findDoctorsByCityAndSpecialty(String city, String specialty);
     List<Doctor> findByCity(String city);
     Doctor findById(long id);
+
     Page<Doctor> findByNameContains(String kw, Pageable pageable);
 }

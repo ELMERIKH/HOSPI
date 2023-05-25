@@ -57,5 +57,5 @@ public class CalendarEvent {
     private LocalDateTime endDateTime;
     private String color;
 
-    // constructors, getters, and setters
+
 }

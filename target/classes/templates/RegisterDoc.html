@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template.html"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Patients </title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+        /* Add some styling to the form */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        h2 {
+            color: #333333;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #cccccc;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Registration Form</h1>
+    <form method="post" th:object="${doctor}" th:action="@{/doctors/register}">
+        <label>name:</label><br>
+        <input type="text"  th:field="*{name}"/><br>
+        <label>Email:</label><br>
+        <input type="email" name="email" th:field="*{email}"/><br>
+        <label for="username">Username:</label>
+
+        <input type="text" id="username" name="username" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="confirmedPassword">Confirm Password:</label>
+        <input type="password" id="confirmedPassword" name="confirmedPassword" required>
+        <label>Image:</label><br>
+        <input type="text" th:field="*{image}"/><br>
+        <label>Speciality:</label><br>
+        <input type="text" th:field="*{specialty}"/><br>
+        <label>City:</label><br>
+        <input type="text" th:field="*{city}"/><br>
+
+        <input type="submit" value="Register">
+    </form>
+</div>
+</body>
+</html>
