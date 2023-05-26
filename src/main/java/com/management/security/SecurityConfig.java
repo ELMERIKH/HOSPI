@@ -62,12 +62,14 @@ public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws
     httpSecurity.authorizeHttpRequests().requestMatchers("/user/**").hasRole("PATIENT");
         httpSecurity.authorizeHttpRequests().requestMatchers("/admin/**").hasRole("ADMIN");
         httpSecurity.authorizeHttpRequests().requestMatchers("/doctors/**").hasRole("DOCTOR");
+        httpSecurity.authorizeHttpRequests().requestMatchers("/register/**").anonymous();
 
         httpSecurity.authorizeHttpRequests().anyRequest().authenticated();
         httpSecurity.exceptionHandling().accessDeniedPage("/notAuthorized");
         httpSecurity.rememberMe().and()
                 .csrf().disable();;
                 httpSecurity.userDetailsService(userDetailServices);
+
     return  httpSecurity.build();
 }
 }

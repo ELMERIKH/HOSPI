@@ -3,10 +3,10 @@ package com.management.controllers;
 import com.management.entities.Doctor;
 import com.management.entities.Patient;
 import com.management.entities.User;
+import com.management.repositories.DoctorRepository;
+import com.management.repositories.PatientRepository;
 import com.management.repositories.UserRepository;
-import com.management.services.UserDetailServicesImpl;
-import com.management.services.Userservice;
-import com.management.services.UserserviceImpl;
+import com.management.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,14 +14,21 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 
 @Controller
     public class UserController {
         @Autowired
         private UserserviceImpl Userservice;
+        @Autowired
+    DoctorService doctorService;
+        @Autowired
+    PatientBookingServiceImpl patientBookingService;
        private final
     UserDetailServicesImpl userDetailServices;
     public UserController(UserDetailServicesImpl userDetailsService) {
@@ -45,9 +52,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
-            return new ModelAndView("redirect:/user/home");
+            return new ModelAndView("redirect:/login");
         }
-    @GetMapping("/doctors/register")
+    @GetMapping("/register/doctors")
     public ModelAndView showRegistrationFormD() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("RegisterDoc");
@@ -63,9 +70,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 
 
-        return new ModelAndView("redirect:/user/home");
+        return new ModelAndView("redirect:/login");
     }
-    @GetMapping("/getid")
+    //@GetMapping("/getid")
     public ResponseEntity<String> getCurrentUserId(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
             // User is not authenticated
@@ -83,5 +90,47 @@ import org.springframework.web.servlet.ModelAndView;
         String userId = user.getId();
         return ResponseEntity.ok(userId);
     }
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Object principal = authentication.getPrincipal();
+
+        if (principal instanceof UserDetails) {
+            UserDetails userDetails = (UserDetails) principal;
+            String username = userDetails.getUsername();
+
+            // Assuming you have a service or repository to fetch the user entity based on the username
+            return userRepository.findByUsername(username);
+        }
+
+        return null; // Return null if the current user is not found or not authenticated
+    }
+    @GetMapping("/profile")
+    public String Profile(Model model) {
+        User currentUser = getCurrentUser();
+
+        if (currentUser!=null &&currentUser.getDoctor()!=null&& currentUser.getDoctorId()!=null ) {
+            Long doctorId = currentUser.getDoctorId();
+           Doctor doctor= doctorService.getDoctorById(doctorId);
+
+            model.addAttribute("user",currentUser );
+            model.addAttribute("doctor",doctor );
+
+        }
+        else if (currentUser!=null &&currentUser.getPatient()!=null  && currentUser.getPatient().getId()!=null) {
+            Long patientId = currentUser.getPatient().getId();
+         Patient patient= patientBookingService.getPatientById(patientId);
+
+
+            model.addAttribute("user",currentUser );
+            model.addAttribute("Patient",patient);
+
+        }
+        else if (currentUser!=null && currentUser.getPatient()==null && currentUser.getDoctor()==null)  {
+
+            model.addAttribute("user",currentUser );
+        }
+        return "Profile";
+    }
+
 
 }

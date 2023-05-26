@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="template.html"
+>
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <style>
+
+            .profile-container {
+                padding: 30px;
+            }
+
+            .profile-header {
+                margin-bottom: 20px;
+            }
+
+            .profile-info {
+                background-color: #f8f9fa;
+                padding: 20px;
+                border-radius: 5px;
+            }
+
+            .profile-details {
+                margin-bottom: 20px;
+            }
+
+            .profile-label {
+                font-weight: bold;
+            }
+
+            .profile-value {
+                margin-left: 10px;
+            }
+
+            .btn-edit-profile {
+                margin-top: 10px;
+            }
+        </style>
+</head>
+<body>
+<div layout:fragment="content">
+<div class="container profile-container">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="profile-header">
+                <h1>Profile</h1>
+            </div>
+            <div class="text-end">
+                <a href="#" class="btn btn-primary btn-edit-profile">Edit Profile</a>
+            </div>
+            <div class="profile-info">
+
+                <div class="profile-details">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="profile-label">Username:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="profile-value" th:text="${user.username}"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="profile-label">Email:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="profile-value" th:text="${user.email}"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label class="profile-label">User ID:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="profile-value" th:text="${user.id}"></span>
+                        </div>
+                    </div>
+                    <!-- Add more profile details here based on the user's role -->
+                    <!-- For example, if the user is a doctor -->
+                    <div th:if="${doctor}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="profile-label">Specialty:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span class="profile-value" th:text="${doctor.specialty}"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                        <div class="col-md-4">
+                            <label class="profile-label">City:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <span class="profile-value" th:text="${doctor.city}"></span>
+                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="profile-label">Image:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <img class="img-fluid" th:src="${doctor.image}" th:alt="${doctor.name}" width="220" height="200" >
+                            </div>
+                        </div>
+                    </div>
+                        <!-- Add more doctor-related profile details here -->
+                    </div>
+                    <!-- If the user is a patient -->
+                    <div th:if="${Patient}">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="profile-label">Date of Birth:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span class="profile-value" th:text="${Patient.dateNaissance}"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="profile-label">Phone:</label>
+                            </div>
+                            <div class="col-md-8">
+                                <span class="profile-value" th:text="${Patient.phone}"></span>
+                            </div>
+                        </div>
+                        <!-- Add more patient-related profile details here -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

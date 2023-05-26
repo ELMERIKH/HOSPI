@@ -47,7 +47,7 @@
 </head>
 <body>
 <div layout:fragment="content">
-    <h1>Registration Form</h1>
+    <h1>Registration </h1>
     <form method="post" th:object="${doctor}" th:action="@{/doctors/register}">
         <label>name:</label><br>
         <input type="text"  th:field="*{name}"/><br>
