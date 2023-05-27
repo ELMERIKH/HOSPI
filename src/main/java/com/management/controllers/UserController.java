@@ -62,7 +62,7 @@ import java.util.Optional;
 
         return modelAndView;
     }
-    @PostMapping("/doctors/register")
+    @PostMapping("/register/doctors")
     public ModelAndView registerDoctor(@ModelAttribute Doctor doctor,@RequestParam String username,@RequestParam String email, @RequestParam String password, @RequestParam String confirmedPassword) {
 
         Userservice.saveDocter(username,email, password,doctor);
