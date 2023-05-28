@@ -4,8 +4,10 @@ package com.management.controllers;
 import com.management.entities.Appointment;
 import com.management.entities.Doctor;
 import com.management.entities.Patient;
+import com.management.entities.User;
 import com.management.repositories.DoctorRepository;
 import com.management.repositories.PatientRepository;
+import com.management.repositories.UserRepository;
 import com.management.services.DoctorService;
 import com.management.services.PatientBookingServiceImpl;
 import jakarta.validation.Valid;
@@ -13,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,10 +37,12 @@ public class PatientController {
     private DoctorService doctorService;
     @Autowired
     private DoctorRepository doctorRepository;
+    @Autowired
+    UserRepository userRepository;
 
     public PatientController() {
     }
-    @GetMapping({"/user/home"})
+    @GetMapping({"/home"})
     public String index() {
 
         return "Home";
@@ -43,9 +50,9 @@ public class PatientController {
     @GetMapping({"/"})
     public String home() {
 
-        return "redirect:/user/home";
+        return "redirect:/home";
     }
-    @GetMapping({"admin/index"})
+    @GetMapping({"admin/doctors/patients"})
     public String index(Model model, @RequestParam(name = "page",defaultValue = "0") int page, @RequestParam(name = "size",defaultValue = "5") int size, @RequestParam(name = "keyword",defaultValue = "") String kw) {
         Page<Patient> pagePatients = this.patientRepository.findByNomContains(kw, PageRequest.of(page, size));
         model.addAttribute("listPatients", pagePatients.getContent());
@@ -109,7 +116,7 @@ public class PatientController {
     }
 
     @PostMapping("/request-appointment/{doctorId}")
-    public String submitAppointmentRequestForm(@PathVariable("doctorId")Long doctorId,@RequestParam("nom") String name,
+    public String submitAppointmentRequestForm(Authentication authentication,@PathVariable("doctorId")Long doctorId, @RequestParam("nom") String name,
                                                @RequestParam("email") String email,
                                                @RequestParam("dateNaissance") @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateNaissance,
                                                @RequestParam("phone") long phone,
@@ -117,36 +124,35 @@ public class PatientController {
                                                @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime dateTime) {
 
         // Convert LocalDateTime to Date object
+        if (authentication == null || !authentication.isAuthenticated()) {
+            Patient patient = new Patient();
+            patient.setNom(name);
+            patient.setEmail(email);
+            patient.setPhone(phone);
 
-        Patient patient = new Patient();
-        patient.setNom(name);
-        patient.setEmail(email);
-        patient.setPhone(phone);
+            patient.setDateNaissance(dateNaissance);
 
-        patient.setDateNaissance(dateNaissance);
+            patientRepository.save(patient);
+            appointment.setPatient(patient);
+            appointment.setStartTime(dateTime);
+            patientBookingServiceImpl.bookAppointment(appointment);
+        }
+else {
+            String username = authentication.getName();
+            User user = userRepository.findByUsername(username);
+            Patient patient=patientRepository.getPatientsById(user.getPatient().getId());
 
-        patientRepository.save(patient);
+            patient.setPhone(phone);
+            patientRepository.save(patient);
+            appointment.setPatient(patient);
+            appointment.setStartTime(dateTime);
+            patientBookingServiceImpl.bookAppointment(appointment);
+
+        }
 
 
-        appointment.setPatient(patient);
-        appointment.setStartTime(dateTime);
-        patientBookingServiceImpl.bookAppointment(appointment);
 
         return "redirect:/doctors/appointments";
     }
-    @GetMapping("/appointments/new")
-    public String showNewAppointmentForm(Model model) {
-        Appointment appointment = new Appointment();
-        model.addAttribute("appointment", appointment);
-        return "new-appointment-form";
-    }
 
-    @PostMapping("/appointments/new")
-    public String submitNewAppointmentForm(@ModelAttribute("appointmentRequest") Appointment appointment, BindingResult result) {
-        if (result.hasErrors()) {
-            return "new-appointment-form";
-        }
-        patientBookingServiceImpl.bookAppointment(appointment);
-        return "redirect:/patients/appointments";
-    }
 }

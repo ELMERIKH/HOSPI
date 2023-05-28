@@ -7,24 +7,27 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 
 @Entity
-@Table(name = "user")
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@JsonSerialize
+@Builder
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private String id;
     @NotEmpty(message = "username is Empty")
     @NotBlank(message = "username is Blank")
     @Column(unique=true)
@@ -40,43 +43,69 @@ public class User {
     @Column(unique=true)
     private String email;
     private Instant createdAt;
+
+    public Long getDoctorId() {
+
+        return   getDoctor().getId();
+    }
+    public Doctor getDoctor() {
+        return doctor;
+    }
+
+
+    public void setDoctor(Doctor doctor) {
+        this.doctor = doctor;
+    }
+
+    public Patient getPatient() {
+        return patient;
+    }
+
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
+
     private Boolean enabled;
     @Column(nullable = true,name = "token_signature")
     private String tokenSignature;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles= new ArrayList<>();  ;
+    @OneToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+    @OneToOne
+    @JoinColumn(name = "patient_id")
+    private Patient patient;
 
-    @ManyToOne
-    @JoinColumn(name = "manager_id")
-    private User manager;
 
-    public User getManager() {
-        return manager;
+
+    public String getId() {
+        return id;
     }
 
-    public void setManager(User manager) {
-        this.manager = manager;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public Role getRole() {
-        return role;
+
+
+
+
+
+
+
+
+
+
+
+
+    public void setUserId(String string) {
+
+    }
+    public List<Role> getRoles(){
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
-    }
 
-    public User(String username, String firstname, String lastname, String password, String email, Role role) {
-        this.username = username;
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.createdAt = Instant.from(LocalDateTime.now());
-        this.fullname = lastname + " "+firstname;
-        this.enabled = false;
-        this.password = password;
-        this.email = email;
-        this.role = role;
-    }
 }

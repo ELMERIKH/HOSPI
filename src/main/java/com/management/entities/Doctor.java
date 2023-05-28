@@ -2,7 +2,6 @@ package com.management.entities;
 
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,6 +20,11 @@ public class Doctor {
     private String specialty;
 
     public  Doctor(){};
+
+    public Doctor(String name, String email) {
+        this.name=name;
+        this.email=email;
+    }
 
     public String getImage() {
         return image;
